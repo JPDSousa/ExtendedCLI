@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.extendedCLI.command.standard.Help;
 import org.extendedCLI.command.standard.History;
@@ -16,14 +17,21 @@ public class CLIBuilder {
 	private final Map<Long, Command> history;
 	private BufferedReader inputReader;
 	
-	public CLIBuilder() {
+	public CLIBuilder(final boolean ignoreCase) {
 		history = new LinkedHashMap<>();
-		commands = createDefaultCommandMap();
+		commands = createDefaultCommandMap(ignoreCase);
 		inputReader = null;
 	}
 	
-	private Map<String, Command> createDefaultCommandMap() {
-		final Map<String, Command> commandMap = new LinkedHashMap<>();
+	private Map<String, Command> createDefaultCommandMap(final boolean ignoreCase) {
+		final Map<String, Command> commandMap;
+		if(ignoreCase) {
+			commandMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+		}
+		else {
+			commandMap = new TreeMap<>();
+		}
+		
 		commandMap.put("HELP", new Help(commandMap));
 		commandMap.put("History", new History(history));
 		
@@ -46,8 +54,15 @@ public class CLIBuilder {
 		setInputReader(new BufferedReader(new InputStreamReader(stream)));
 	}
 	
-	public ExtendedCLI create() {
-		return new ExtendedCLI(commands, history);
+	public ExtendedCLI build() {
+		return new ExtendedCLI(this);
 	}
 
+	Map<String, Command> getCommands() {
+		return commands;
+	}
+
+	Map<Long, Command> getHistory() {
+		return history;
+	}
 }

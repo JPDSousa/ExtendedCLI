@@ -11,9 +11,9 @@ public class ExtendedCLI {
 	private final Map<String, Command> commands;
 	protected final Map<Long, Command> history;
 
-	ExtendedCLI(Map<String, Command> commands, Map<Long, Command> history) {
-		this.commands = commands;
-		this.history = history;
+	ExtendedCLI(final CLIBuilder builder) {
+		this.commands = builder.getCommands();
+		this.history = builder.getHistory();
 	}
 
 	public void execute(String line) throws NoSuchCommandException {
