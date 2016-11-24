@@ -32,11 +32,25 @@ class DefaultArgument implements Argument {
 
 	DefaultArgument(String name, Requires requiresValue, String description, String[] validValues, String defaultValue) {
 		super();
+		validateName(name);
+		validateRequires(requiresValue);
 		this.name = name;
 		this.requiresValue = requiresValue;
 		this.description = description;
 		this.validValues = validValues;
 		this.defaultValue = defaultValue;
+	}
+
+	private void validateRequires(Requires requires) {
+		if(requires == null) {
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private void validateName(String name) {
+		if(name == null || name.isEmpty() || name.contains(" ")) {
+			throw new IllegalArgumentException(name);
+		}
 	}
 
 	@Override

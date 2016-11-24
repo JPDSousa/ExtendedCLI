@@ -22,7 +22,7 @@ public class ExtendedCLI {
 
 		if(line != null && !line.isEmpty()) {
 			name = new StringTokenizer(line, " ").nextToken();
-			command = commands.get(name.toUpperCase());
+			command = commands.get(name);
 			if(command == null) {
 				throw new NoSuchCommandException(name);
 			}
