@@ -1,6 +1,8 @@
 package org.extendedCLI.command;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,6 +40,10 @@ public class CLIBuilder {
 	public void setInputReader(BufferedReader inputReader) {
 		this.inputReader = inputReader;
 		commands.values().forEach(c -> c.setInputReader(inputReader));
+	}
+	
+	public void setInputReader(InputStream stream) {
+		setInputReader(new BufferedReader(new InputStreamReader(stream)));
 	}
 	
 	public ExtendedCLI create() {
