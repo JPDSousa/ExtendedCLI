@@ -34,6 +34,8 @@ class DefaultArgument implements Argument {
 		super();
 		validateName(name);
 		validateRequires(requiresValue);
+		validateDescription(description);
+		validateDefaultValue(validValues, defaultValue);
 		this.name = name;
 		this.requiresValue = requiresValue;
 		this.description = description;
@@ -41,13 +43,25 @@ class DefaultArgument implements Argument {
 		this.defaultValue = defaultValue;
 	}
 
-	private void validateRequires(Requires requires) {
+	private static void validateDefaultValue(String[] validValues, String defaultValue) {
+		if((validValues == null && defaultValue != null) || ArrayUtils.contains(validValues, defaultValue)) {
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private static void validateDescription(String description) {
+		if(description == null) {
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private static void validateRequires(Requires requires) {
 		if(requires == null) {
 			throw new IllegalArgumentException();
 		}
 	}
 
-	private void validateName(String name) {
+	private static void validateName(String name) {
 		if(name == null || name.isEmpty() || name.contains(" ")) {
 			throw new IllegalArgumentException(name);
 		}
@@ -59,7 +73,7 @@ class DefaultArgument implements Argument {
 	}
 
 	@Override
-	public String getFullName() {
+	public String getFormattedName() {
 		return "-"+name;
 	}
 

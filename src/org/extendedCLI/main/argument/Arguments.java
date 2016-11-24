@@ -120,9 +120,9 @@ public class Arguments {
 		final StringBuilder builder = new StringBuilder();
 		
 		if (group.size() == 1) {
-			builder.append(" [").append(group.get(0).getFullName()).append("]");
+			builder.append(" [").append(group.get(0).getFormattedName()).append("]");
 		} else if (group.size() > 1) {
-			builder.append(" ").append(group.stream().map(Argument::getFullName).collect(Collectors.joining("/")));
+			builder.append(" ").append(group.stream().map(Argument::getFormattedName).collect(Collectors.joining("/")));
 		}
 		
 		return builder.toString();

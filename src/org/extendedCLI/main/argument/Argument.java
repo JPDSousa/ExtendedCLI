@@ -37,7 +37,7 @@ public interface Argument {
 	void setDefaultValue(String value);
 	String getDefaultValue();
 
-	String getFullName();
+	String getFormattedName();
 
 	Option toOption();
 
