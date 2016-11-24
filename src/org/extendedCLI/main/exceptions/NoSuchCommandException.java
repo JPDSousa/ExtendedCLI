@@ -1,4 +1,4 @@
-package org.extendedCLI.exceptions;
+package org.extendedCLI.main.exceptions;
 
 import exceptthis.core.AbsCustomException;
 

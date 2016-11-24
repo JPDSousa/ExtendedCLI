@@ -1,4 +1,4 @@
-package org.extendedCLI.command;
+package org.extendedCLI.main.command;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -7,8 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.extendedCLI.command.standard.Help;
-import org.extendedCLI.command.standard.History;
+import org.extendedCLI.main.command.standard.Help;
+import org.extendedCLI.main.command.standard.History;
 
 @SuppressWarnings("javadoc")
 public class CLIBuilder {

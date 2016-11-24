@@ -1,14 +1,14 @@
-package org.extendedCLI.command.standard;
+package org.extendedCLI.main.command.standard;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 
-import org.extendedCLI.argument.Arguments;
-import org.extendedCLI.command.AbstractCommand;
-import org.extendedCLI.command.Command;
-import org.extendedCLI.command.ExtendedCommandLine;
+import org.extendedCLI.main.argument.Arguments;
+import org.extendedCLI.main.command.AbstractCommand;
+import org.extendedCLI.main.command.Command;
+import org.extendedCLI.main.command.ExtendedCommandLine;
 
 @SuppressWarnings("javadoc")
 public class History extends AbstractCommand{

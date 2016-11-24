@@ -1,4 +1,4 @@
-package org.extendedCLI.argument;
+package org.extendedCLI.main.argument;
 
 import java.util.Arrays;
 

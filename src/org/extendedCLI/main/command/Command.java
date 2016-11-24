@@ -1,8 +1,8 @@
-package org.extendedCLI.command;
+package org.extendedCLI.main.command;
 
 import java.io.BufferedReader;
 
-import org.extendedCLI.argument.Arguments;
+import org.extendedCLI.main.argument.Arguments;
 
 @SuppressWarnings("javadoc")
 public interface Command {

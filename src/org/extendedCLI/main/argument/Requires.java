@@ -1,4 +1,4 @@
-package org.extendedCLI.argument;
+package org.extendedCLI.main.argument;
 
 @SuppressWarnings("javadoc")
 public enum Requires {

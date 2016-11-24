@@ -1,4 +1,4 @@
-package org.extendedCLI.argument;
+package org.extendedCLI.main.argument;
 
 import org.apache.commons.cli.Option;
 
