@@ -1,7 +1,5 @@
 package org.extendedCLI.main.argument;
 
-import java.util.Arrays;
-
 import org.apache.commons.cli.Option;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -13,22 +11,6 @@ class DefaultArgument implements Argument {
 	private String[] validValues;
 	private final String description;
 	private String defaultValue;
-
-	DefaultArgument(String name, Requires requiresValue) {
-		this(name, requiresValue, new String[0]);
-	}
-
-	DefaultArgument(String name, Requires requiresValue, String[] validValues) {
-		this(name, requiresValue, "No description provided", validValues);
-	}
-
-	DefaultArgument(String name, Requires requiresValue, String description) {
-		this(name, requiresValue, description, new String[0]);
-	}
-
-	DefaultArgument(String name, Requires requiresValue, String description, String[] validValues) {
-		this(name, requiresValue, description, validValues, null);
-	}
 
 	DefaultArgument(String name, Requires requiresValue, String description, String[] validValues, String defaultValue) {
 		super();
@@ -44,7 +26,7 @@ class DefaultArgument implements Argument {
 	}
 
 	private static void validateDefaultValue(String[] validValues, String defaultValue) {
-		if((validValues == null && defaultValue != null) || ArrayUtils.contains(validValues, defaultValue)) {
+		if(((validValues == null || validValues.length == 0) && defaultValue != null) || (defaultValue != null && !ArrayUtils.contains(validValues, defaultValue))) {
 			throw new IllegalArgumentException();
 		}
 	}
@@ -84,7 +66,7 @@ class DefaultArgument implements Argument {
 
 	@Override
 	public void setValidValues(String[] validValues) {
-		this.validValues = Arrays.stream(validValues).map(String::toUpperCase).toArray(String[]::new);
+		this.validValues = validValues;
 	}
 	
 	@Override
@@ -93,10 +75,11 @@ class DefaultArgument implements Argument {
 	}
 
 	@Override
-	public boolean isValid(String value) {		
-		return validValues == null 
-				|| validValues.length == 0 
-				|| ArrayUtils.contains(validValues, value.toUpperCase());
+	public boolean isValid(String value) {
+		return value != null 
+				&& validValues != null 
+				&& validValues.length > 0 
+				&& ArrayUtils.contains(validValues, value);
 	}
 
 	@Override
@@ -125,6 +108,7 @@ class DefaultArgument implements Argument {
 
 	@Override
 	public void setDefaultValue(String value) {
+		validateDefaultValue(validValues, value);
 		this.defaultValue = value;
 	}
 

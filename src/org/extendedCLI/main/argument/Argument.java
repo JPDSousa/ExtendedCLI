@@ -6,19 +6,23 @@ import org.apache.commons.cli.Option;
 public interface Argument {
 
 	static Argument create(String name, Requires requiresValue) {
-		return new DefaultArgument(name, requiresValue);
+		return create(name, requiresValue, new String[0]);
 	}
 	
 	static Argument create(String name, Requires requiresValue, String[] validValues) {
-		return new DefaultArgument(name, requiresValue, validValues);
+		return create(name, requiresValue, validValues, null);
 	}
 	
 	static Argument create(String name, Requires requiresValue, String description) {
-		return new DefaultArgument(name, requiresValue, description);
+		return create(name, requiresValue, description, new String[0]);
+	}
+
+	static Argument create(String name, Requires requiresValue, String[] validValues, String defaultValue) {
+		return create(name, requiresValue, "No description provided", validValues, defaultValue);
 	}
 	
 	static Argument create(String name, Requires requiresValue, String description, String[] validValues) {
-		return new DefaultArgument(name, requiresValue, description, validValues);
+		return create(name, requiresValue, description, validValues, null);
 	}
 	
 	static Argument create(String name, Requires requiresValue, String description, String[] validValues, String defaultValue) {
