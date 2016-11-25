@@ -86,6 +86,11 @@ class DefaultArgument implements Argument {
 	public void setValidValues(String[] validValues) {
 		this.validValues = Arrays.stream(validValues).map(String::toUpperCase).toArray(String[]::new);
 	}
+	
+	@Override
+	public String[] getValidValues() {
+		return validValues;
+	}
 
 	@Override
 	public boolean isValid(String value) {		

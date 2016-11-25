@@ -44,5 +44,7 @@ public interface Argument {
 	void setLongName(String longName);
 
 	String getLongName();
+
+	String[] getValidValues();
 	
 }
