@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.extendedCLI.main.command.standard.Exit;
 import org.extendedCLI.main.command.standard.Help;
 import org.extendedCLI.main.command.standard.History;
 
@@ -33,7 +34,8 @@ public class CLIBuilder {
 		}
 		
 		commandMap.put("HELP", new Help(commandMap));
-		commandMap.put("History", new History(history));
+		commandMap.put("HISTORY", new History(history));
+		commandMap.put("EXIT", new Exit());
 		
 		return commandMap;
 	}
