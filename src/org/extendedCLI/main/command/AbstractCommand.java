@@ -76,4 +76,9 @@ public abstract class AbstractCommand implements Command {
 
 		return builder.toString();
 	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
 }

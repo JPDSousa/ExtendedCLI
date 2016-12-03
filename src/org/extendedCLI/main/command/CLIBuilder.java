@@ -42,6 +42,7 @@ public class CLIBuilder {
 
 	public void registerCommand(String name, Command command) {
 		commands.put(name.toUpperCase(), command);
+		command.setName(name);
 		if(inputReader != null) {
 			command.setInputReader(inputReader);
 		}
