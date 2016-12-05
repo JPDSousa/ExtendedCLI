@@ -10,12 +10,12 @@ public interface Arguments {
 	
 	static final Argument HELP = Argument.create("h", Requires.FALSE, "Provides help about this command.");
 
-	public static ArgumentsImpl empty() {
+	public static Arguments empty() {
 		return new ArgumentsImpl();
 	}
 
-	public static ArgumentsImpl create() {
-		final ArgumentsImpl arguments = empty();
+	public static Arguments create() {
+		final ArgumentsImpl arguments = new ArgumentsImpl();
 		arguments.addDefaultArgument(-1, HELP);
 
 		return arguments;
@@ -42,6 +42,8 @@ public interface Arguments {
 	void addArguments(ArgumentEnum[] enumValues);
 
 	Options toOptions();
+	
+	Iterable<Argument> getArguments();
 	
 	
 }
