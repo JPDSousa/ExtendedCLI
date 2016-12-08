@@ -191,9 +191,4 @@ class ArgumentsImpl implements Arguments{
 		addArgument(argument);
 		groups.put(groupID, Arrays.asList(argument));
 	}
-
-	@Override
-	public Iterable<Argument> getArguments() {
-		return args;
-	}
 }
