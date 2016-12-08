@@ -43,7 +43,5 @@ public interface Arguments {
 
 	Options toOptions();
 	
-	Iterable<Argument> getArguments();
-	
 	
 }
