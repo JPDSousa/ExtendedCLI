@@ -9,8 +9,8 @@ public class ArgumentEnumTest {
 	
 	@Test
 	public void testGetGroupID() {
-		assertEquals("Group ip returned should match group id set on enum construction", EnumTest.GROUP_ID, EnumTest.ARG1.getGroupID());
-		assertEquals("Group ip returned should match group id set on enum construction", EnumTest.GROUP_ID, EnumTest.ARG2.getGroupID());
+		assertEquals("Group ip returned should match group id set on enum construction", EnumTest.GROUP_ID_1, EnumTest.ARG1.getGroupID());
+		assertEquals("Group ip returned should match group id set on enum construction", EnumTest.GROUP_ID_1, EnumTest.ARG2.getGroupID());
 	}
 	
 	@Test
