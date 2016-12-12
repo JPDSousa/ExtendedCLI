@@ -29,6 +29,8 @@ public interface Arguments {
 
 	void enableGroupOrder(int groupID);
 
+	Iterable<Integer> getGroupOrder();
+
 	String getSyntax();
 
 	void setRequirementRelation(Argument arg, Argument required);

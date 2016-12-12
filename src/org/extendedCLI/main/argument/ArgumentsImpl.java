@@ -54,6 +54,11 @@ class ArgumentsImpl implements Arguments{
 			order.add(groupID);
 		}
 	}
+	
+	@Override
+	public Iterable<Integer> getGroupOrder() {
+		return order;
+	}
 
 	@Override
 	public void addArguments(ArgumentEnum[] enumValues) {
