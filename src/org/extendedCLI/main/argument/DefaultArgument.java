@@ -116,7 +116,7 @@ class DefaultArgument implements Argument {
 
 	@Override
 	public void setDefaultValue(String value) {
-		checkValidDefaultValue(validValues, value);
+		checkValidDefaultValue(getName(), validValues, value);
 		this.defaultValue = value;
 	}
 
