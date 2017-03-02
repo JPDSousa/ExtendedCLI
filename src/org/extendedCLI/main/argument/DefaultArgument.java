@@ -14,10 +14,11 @@ class DefaultArgument implements Argument {
 
 	DefaultArgument(String name, Requires requiresValue, String description, String[] validValues, String defaultValue) {
 		super();
-		validateName(name);
-		validateRequires(requiresValue);
-		validateDescription(description);
-		validateDefaultValue(validValues, defaultValue);
+		checkValidName(name);
+		checkValidRequires(name, requiresValue);
+		checkValidDescription(name, description);
+		checkValidValues(name, validValues);
+		checkValidDefaultValue(name, validValues, defaultValue);
 		this.name = name;
 		this.requiresValue = requiresValue;
 		this.description = description;
@@ -25,27 +26,33 @@ class DefaultArgument implements Argument {
 		this.defaultValue = defaultValue;
 	}
 
-	private static void validateDefaultValue(String[] validValues, String defaultValue) {
-		if(((validValues == null || validValues.length == 0) && defaultValue != null) || (defaultValue != null && !ArrayUtils.contains(validValues, defaultValue))) {
-			throw new IllegalArgumentException();
+	private void checkValidValues(String name, String[] values) {
+		if(values == null) {
+			throw new IllegalArgumentException("The valid values for " + name + " cannot be null.");
 		}
 	}
 
-	private static void validateDescription(String description) {
+	private void checkValidDefaultValue(String name, String[] validValues, String defaultValue) {
+		if(isValid(defaultValue, validValues)) {
+			throw new IllegalArgumentException("The default value '" + defaultValue + "' is not valid for argument " + name);
+		}
+	}
+
+	private void checkValidDescription(String name, String description) {
 		if(description == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("The description for argument " + name + " cannot be null");
 		}
 	}
 
-	private static void validateRequires(Requires requires) {
+	private void checkValidRequires(String name, Requires requires) {
 		if(requires == null) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("The requirement specification for argument " + name + " cannot be null");
 		}
 	}
 
-	private static void validateName(String name) {
+	private void checkValidName(String name) {
 		if(name == null || name.isEmpty() || name.contains(" ")) {
-			throw new IllegalArgumentException(name);
+			throw new IllegalArgumentException(name + " is not a valid name for an argument.");
 		}
 	}
 
@@ -76,10 +83,11 @@ class DefaultArgument implements Argument {
 
 	@Override
 	public boolean isValid(String value) {
-		return value != null 
-				&& validValues != null 
-				&& validValues.length > 0 
-				&& ArrayUtils.contains(validValues, value);
+		return isValid(value, validValues);
+	}
+	
+	private boolean isValid(String value, String[] validValues) {
+		return value != null && (validValues.length == 0 || ArrayUtils.contains(validValues, value));
 	}
 
 	@Override
@@ -108,7 +116,7 @@ class DefaultArgument implements Argument {
 
 	@Override
 	public void setDefaultValue(String value) {
-		validateDefaultValue(validValues, value);
+		checkValidDefaultValue(validValues, value);
 		this.defaultValue = value;
 	}
 
