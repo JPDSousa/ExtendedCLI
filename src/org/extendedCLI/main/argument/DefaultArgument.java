@@ -33,7 +33,7 @@ class DefaultArgument implements Argument {
 	}
 
 	private void checkValidDefaultValue(String name, String[] validValues, String defaultValue) {
-		if(isValid(defaultValue, validValues)) {
+		if(!isValid(defaultValue, validValues)) {
 			throw new IllegalArgumentException("The default value '" + defaultValue + "' is not valid for argument " + name);
 		}
 	}
@@ -87,7 +87,7 @@ class DefaultArgument implements Argument {
 	}
 	
 	private boolean isValid(String value, String[] validValues) {
-		return value != null && (validValues.length == 0 || ArrayUtils.contains(validValues, value));
+		return validValues.length == 0 || ( value != null && ArrayUtils.contains(validValues, value));
 	}
 
 	@Override
