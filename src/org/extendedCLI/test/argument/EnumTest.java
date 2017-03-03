@@ -7,7 +7,7 @@ import org.extendedCLI.main.argument.Requires;
 interface Args {
 	static final Argument _ARG1 = Argument.create("This", Requires.FALSE);
 	static final Argument _ARG2 = Argument.create("That", Requires.OPTIONAL, "just a normal description");
-	static final Argument _ARG3 = Argument.create("Those", Requires.TRUE, "A small and simple description", new String[]{"this", "that"});
+	static final Argument _ARG3 = Argument.create("Those", Requires.TRUE, "A small and simple description", new String[]{"this", "that"}, "this");
 	static final Argument _ARG4 = Argument.create("These", Requires.OPTIONAL);
 }
 

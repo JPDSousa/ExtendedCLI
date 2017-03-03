@@ -21,20 +21,9 @@ public class ArgumentTest {
 	public void testConstructorNameRequiresDescription() {
 		assertNotNull(Argument.create("name", Requires.FALSE, "Desc"));
 	}
-	
-	@Test(expected = None.class)
-	public void testConstructorNameRequiresValidValues() {
-		assertNotNull(Argument.create("Name", Requires.OPTIONAL, new String[]{"Aa", "BAs"}));
-	}
-	
 	@Test(expected = None.class)
 	public void testConstructorNameRequiresValidValuesDefaultValue() {
 		assertNotNull(Argument.create("Name", Requires.OPTIONAL, new String[]{"default"}, "default"));
-	}
-	
-	@Test(expected = None.class)
-	public void testConstructorNameRequiresDescriptionValidValues() {
-		assertNotNull(Argument.create("Name", Requires.FALSE, "Desc", new String[]{"Valid", "Values"}));
 	}
 	
 	@Test(expected = None.class)
@@ -103,7 +92,7 @@ public class ArgumentTest {
 	@Test
 	public void testGetValidValuesConstructor() {
 		final String[] validValues = new String[]{"valid", "values"};
-		final Argument argument = Argument.create("Name", Requires.FALSE, validValues);
+		final Argument argument = Argument.create("Name", Requires.FALSE, validValues, validValues[0]);
 		
 		assertArrayEquals("Value passed on constructor should be returned by getter", validValues, argument.getValidValues());
 	}
@@ -111,7 +100,7 @@ public class ArgumentTest {
 	@Test
 	public void testGetValidValues() {
 		final String[] validValues = new String[]{"valid", "values"};
-		final Argument argument = Argument.create("Name", Requires.OPTIONAL, new String[]{"this", "that"});
+		final Argument argument = Argument.create("Name", Requires.OPTIONAL, new String[]{"this", "that"}, "this");
 		argument.setValidValues(validValues);
 		
 		assertArrayEquals("Value passed on setter should be returned by getter", validValues, argument.getValidValues());
@@ -121,7 +110,7 @@ public class ArgumentTest {
 	public void testIsValid() {
 		final String valid = "valid";
 		final String[] validValues = new String[]{valid, "values"};
-		final Argument argument = Argument.create("Name", Requires.TRUE, validValues);
+		final Argument argument = Argument.create("Name", Requires.TRUE, validValues, validValues[0]);
 		
 		assertFalse("Null is not valid", argument.isValid(null));
 		assertFalse("Empty string is not valid", argument.isValid(""));
