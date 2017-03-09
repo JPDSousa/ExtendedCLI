@@ -107,7 +107,6 @@ class ArgumentsImpl implements Arguments{
 			if(commandLine.hasOption(HELP.getName())) {
 				return null;
 			}
-			validateGroups(commandLine);
 			validateRequirements(commandLine);
 			validateValues(commandLine);
 			return new ExtendedCommandLine(commandLine);
@@ -153,17 +152,6 @@ class ArgumentsImpl implements Arguments{
 
 	}
 
-	private void validateGroups(CommandLine commandLine) {
-		final long nonMutex = groups.keySet().stream()
-				.map(id -> groups.get(id))
-				.filter(l -> l.size() > 1)
-				.filter(l -> !xor(commandLine, l)).count();
-
-		if (nonMutex > 0) {
-			throw new IllegalArgumentException();
-		}
-	}
-
 	private void validateRequirements(CommandLine commandLine) {
 		for (Argument arg : requirements.keySet()) {
 			thisRequiresThose(commandLine, arg, requirements.get(arg));
@@ -176,10 +164,6 @@ class ArgumentsImpl implements Arguments{
 		args.forEach(a -> options.addOption(a.toOption()));
 
 		return options;
-	}
-
-	private static boolean xor(CommandLine commandLine, List<Argument> l) {
-		return l.stream().filter(a -> commandLine.hasOption(a.getName())).count() == 1;
 	}
 
 	private static boolean and(CommandLine commandLine, List<Argument> l) {
