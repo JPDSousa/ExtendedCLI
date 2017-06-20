@@ -44,5 +44,7 @@ public interface Arguments {
 
 	Options toOptions();
 	
+	boolean contains(Argument argument);
+	
 	
 }

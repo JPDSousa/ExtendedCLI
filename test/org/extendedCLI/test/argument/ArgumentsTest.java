@@ -103,7 +103,7 @@ public class ArgumentsTest {
 		args.addArgument(arg1);
 		args.addArgument(arg2);
 		args.setRequirementRelation(arg1, arg2);
-		assertTrue(Iterables.contains(args.getRequiredArguments(arg1), arg2));
+		assertTrue(Iterables.contains(args.getRequiredArguments(arg1), arg2.getArgument()));
 	}
 	
 	@Test
@@ -111,7 +111,7 @@ public class ArgumentsTest {
 		final ArgsEnum arg2 = ArgsEnum.ARG2;
 		final ArgsEnum arg1 = ArgsEnum.ARG1;
 		args.setRequirementRelation(arg1, arg2);
-		assertTrue(Iterables.isEmpty(args.getRequiredArguments(arg1)));
+		assertNull(args.getRequiredArguments(arg1));
 		args.addArgument(arg1);
 		args.setRequirementRelation(arg1, arg2);
 		assertTrue(Iterables.isEmpty(args.getRequiredArguments(arg1)));

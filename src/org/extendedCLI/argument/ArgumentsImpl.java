@@ -1,7 +1,6 @@
 package org.extendedCLI.argument;
 
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -26,27 +25,25 @@ import static com.google.common.base.Preconditions.*;
 
 class ArgumentsImpl implements Arguments{
 
-	private final Set<Argument> args;
 	private final SetMultimap<Integer, Argument> groups;
-	private final MutableGraph<Argument> requirements;
+	private final MutableGraph<Argument> args;
 	private final SortedSet<Integer> order;
 
 	ArgumentsImpl() {
-		args = new LinkedHashSet<>();
 		groups = LinkedHashMultimap.create();
-		requirements = GraphBuilder.directed().build();
+		args = GraphBuilder.directed().build();
 		order = new TreeSet<>();
 	}
 
 	@Override
 	public Stream<Argument> stream() {
-		return args.stream();
+		return args.nodes().stream();
 	}
 
 	@Override
 	public void addArgument(Argument arg) {
 		checkArgument(arg != null, "Cannot add a null argument.");
-		args.add(arg);
+		args.addNode(arg);
 	}
 
 	@Override
@@ -76,15 +73,15 @@ class ArgumentsImpl implements Arguments{
 
 	@Override
 	public void setGroupID(Argument arg, int groupID) {
-		if (args.contains(arg)) {
+		if (contains(arg)) {
 			groups.put(groupID, arg);
 		}
 	}
 
 	@Override
 	public void setRequirementRelation(Argument arg, Argument required) {
-		if (args.contains(arg) && args.contains(required)) {
-			requirements.putEdge(arg, required);
+		if (contains(arg) && contains(required)) {
+			args.putEdge(arg, required);
 		}
 	}
 
@@ -97,7 +94,7 @@ class ArgumentsImpl implements Arguments{
 	@Override
 	public Iterable<Argument> getRequiredArguments(Argument arg) {
 		checkArgument(arg != null, "Cannot add a null argument.");
-		return requirements.successors(arg);
+		return contains(arg) ? args.successors(arg) : null;
 	}
 
 	@Override
@@ -149,7 +146,7 @@ class ArgumentsImpl implements Arguments{
 	}
 
 	private void validateValues(CommandLine commandLine) {
-		boolean invalidArgs = args.stream()
+		boolean invalidArgs = stream()
 				.filter(a -> commandLine.hasOption(a.getName()) && a.requiresValue() == Requires.TRUE)
 				.filter(a -> commandLine.getOptionValue(a.getName(), "").isEmpty()
 						|| !a.isValid(commandLine.getOptionValue(a.getName())))
@@ -162,15 +159,15 @@ class ArgumentsImpl implements Arguments{
 	}
 
 	private void validateRequirements(CommandLine commandLine) {
-		for (Argument arg : requirements.nodes()) {
-			thisRequiresThose(commandLine, arg, requirements.successors(arg));
+		for (Argument arg : args.nodes()) {
+			thisRequiresThose(commandLine, arg, args.successors(arg));
 		}
 	}
 
 	@Override
 	public Options toOptions() {
 		final Options options = new Options();
-		args.forEach(a -> options.addOption(a.toOption()));
+		stream().forEach(a -> options.addOption(a.toOption()));
 
 		return options;
 	}
@@ -183,5 +180,10 @@ class ArgumentsImpl implements Arguments{
 		if (commandLine.hasOption(thiz.getDescription()) && !and(commandLine, those)) {
 			throw new IllegalArgumentException();
 		}
+	}
+
+	@Override
+	public boolean contains(Argument argument) {
+		return args.nodes().contains(argument);
 	}
 }
