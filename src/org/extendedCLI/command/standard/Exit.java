@@ -1,8 +1,8 @@
-package org.extendedCLI.main.command.standard;
+package org.extendedCLI.command.standard;
 
-import org.extendedCLI.main.argument.Arguments;
-import org.extendedCLI.main.command.AbstractCommand;
-import org.extendedCLI.main.command.ExtendedCommandLine;
+import org.extendedCLI.argument.Arguments;
+import org.extendedCLI.command.AbstractCommand;
+import org.extendedCLI.command.ExtendedCommandLine;
 
 @SuppressWarnings("javadoc")
 public class Exit extends AbstractCommand {

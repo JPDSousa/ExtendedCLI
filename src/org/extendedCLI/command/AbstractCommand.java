@@ -1,9 +1,9 @@
-package org.extendedCLI.main.command;
+package org.extendedCLI.command;
 
 import java.io.BufferedReader;
 
 import org.apache.commons.cli.HelpFormatter;
-import org.extendedCLI.main.argument.Arguments;
+import org.extendedCLI.argument.Arguments;
 
 @SuppressWarnings("javadoc")
 public abstract class AbstractCommand implements Command {

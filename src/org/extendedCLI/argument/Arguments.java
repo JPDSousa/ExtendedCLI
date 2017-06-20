@@ -1,9 +1,9 @@
-package org.extendedCLI.main.argument;
+package org.extendedCLI.argument;
 
 import java.util.stream.Stream;
 
 import org.apache.commons.cli.Options;
-import org.extendedCLI.main.command.ExtendedCommandLine;
+import org.extendedCLI.command.ExtendedCommandLine;
 
 @SuppressWarnings("javadoc")
 public interface Arguments {

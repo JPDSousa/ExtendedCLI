@@ -1,4 +1,4 @@
-package org.extendedCLI.main.exceptions;
+package org.extendedCLI.exceptions;
 
 @SuppressWarnings("javadoc")
 public final class NoSuchCommandException extends Exception {

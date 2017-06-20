@@ -2,8 +2,8 @@ package org.extendedCLI.test.argument;
 
 import static org.junit.Assert.*;
 
-import org.extendedCLI.main.argument.Argument;
-import org.extendedCLI.main.argument.Requires;
+import org.extendedCLI.argument.Argument;
+import org.extendedCLI.argument.Requires;
 import org.junit.Test;
 import org.junit.Test.None;
 

@@ -1,4 +1,4 @@
-package org.extendedCLI.main.argument;
+package org.extendedCLI.argument;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +16,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.extendedCLI.main.command.ExtendedCommandLine;
+import org.extendedCLI.command.ExtendedCommandLine;
 
 class ArgumentsImpl implements Arguments{
 

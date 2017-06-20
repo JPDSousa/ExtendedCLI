@@ -1,12 +1,12 @@
-package org.extendedCLI.main.command.standard;
+package org.extendedCLI.command.standard;
 
 import java.util.Map;
 
 import org.apache.commons.cli.HelpFormatter;
-import org.extendedCLI.main.argument.Arguments;
-import org.extendedCLI.main.command.AbstractCommand;
-import org.extendedCLI.main.command.Command;
-import org.extendedCLI.main.command.ExtendedCommandLine;
+import org.extendedCLI.argument.Arguments;
+import org.extendedCLI.command.AbstractCommand;
+import org.extendedCLI.command.Command;
+import org.extendedCLI.command.ExtendedCommandLine;
 
 @SuppressWarnings("javadoc")
 public class Help extends AbstractCommand {

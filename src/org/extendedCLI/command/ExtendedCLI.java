@@ -1,9 +1,9 @@
-package org.extendedCLI.main.command;
+package org.extendedCLI.command;
 
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.extendedCLI.main.exceptions.NoSuchCommandException;
+import org.extendedCLI.exceptions.NoSuchCommandException;
 
 @SuppressWarnings("javadoc")
 public class ExtendedCLI {

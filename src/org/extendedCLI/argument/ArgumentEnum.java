@@ -1,4 +1,4 @@
-package org.extendedCLI.main.argument;
+package org.extendedCLI.argument;
 
 /**
  * This interface is used as a wrapper for enumerations ({@link Enum}. For code readability and simplicity, we design this interface so that developers

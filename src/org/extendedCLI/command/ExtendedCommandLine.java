@@ -1,8 +1,8 @@
-package org.extendedCLI.main.command;
+package org.extendedCLI.command;
 
 import org.apache.commons.cli.CommandLine;
-import org.extendedCLI.main.argument.Argument;
-import org.extendedCLI.main.argument.ArgumentEnum;
+import org.extendedCLI.argument.Argument;
+import org.extendedCLI.argument.ArgumentEnum;
 
 @SuppressWarnings("javadoc")
 public class ExtendedCommandLine {

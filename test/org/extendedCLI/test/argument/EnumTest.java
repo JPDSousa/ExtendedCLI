@@ -1,8 +1,8 @@
 package org.extendedCLI.test.argument;
 
-import org.extendedCLI.main.argument.Argument;
-import org.extendedCLI.main.argument.ArgumentEnum;
-import org.extendedCLI.main.argument.Requires;
+import org.extendedCLI.argument.Argument;
+import org.extendedCLI.argument.ArgumentEnum;
+import org.extendedCLI.argument.Requires;
 
 interface Args {
 	static final Argument _ARG1 = Argument.create("This", Requires.FALSE);
