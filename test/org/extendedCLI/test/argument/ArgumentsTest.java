@@ -2,60 +2,96 @@ package org.extendedCLI.test.argument;
 
 import static org.junit.Assert.*;
 
-import org.extendedCLI.argument.Argument;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.extendedCLI.argument.Arguments;
-import org.extendedCLI.argument.Requires;
+import org.junit.Before;
 import org.junit.Test;
 
 @SuppressWarnings("javadoc")
 public class ArgumentsTest {
 
+	private static Arguments args;
+	
+	@Before
+	public void setUp() {
+		args = Arguments.empty();
+	}
+	
 	@Test
 	public void testStaticEmpty() {
-		final Arguments args = Arguments.empty();
-		assertNotNull("Empty creator should return a non-null object", args);
-		assertTrue("Empty arguments (object) should not have any arguments", args.stream().count() == 0);
+		assertNotNull(args);
+		assertTrue(args.stream().count() == 0);
 	}
 
 	@Test
 	public void testStaticCreate() {
-		final Arguments args = Arguments.create();
-		assertNotNull("Creator should not return a null object", args);
+		assertNotNull(Arguments.create());
 	}
 
 	@Test
 	public void testStream() {
-		final Arguments arguments = Arguments.create();
-		assertNotNull(arguments.stream());
+		assertNotNull(Arguments.create().stream());
 	}
 
 	@Test
 	public void testAddArgument() {
-		final Arguments arguments = Arguments.empty();
-		final Argument arg1 = Argument.create("x", Requires.FALSE);
-		final Argument arg2 = Argument.create("y", Requires.FALSE);
-
-		assertEquals("Initial (empty) arguments should have no arguments", 0, arguments.stream().count());
-		arguments.addArgument(arg1);
-		assertEquals("Empty arguments + 1 argument (should) = 1 argument", 1, arguments.stream().count());
-		arguments.addArgument(arg2);
-		assertEquals("Empty arguments + 2 arguments (should) = 2 arguments", 2, arguments.stream().count());
-		arguments.addArgument(arg1);
-		assertEquals("Adding an argument multiple time should have no effect on the number of arguments", 2,
-				arguments.stream().count());
+		assertEquals(0, args.stream().count());
+		args.addArgument(ArgsEnum.ARG1.getArgument());
+		assertEquals(1, args.stream().count());
+		args.addArgument(ArgsEnum.ARG2.getArgument());
+		assertEquals(2, args.stream().count());
+		args.addArgument(ArgsEnum.ARG3.getArgument());
+		assertEquals(3, args.stream().count());
 	}
 
 	@Test
 	public void testAddArgumentEnum() {
-		final Arguments arguments = Arguments.empty();
-
-		assertEquals("Initial (empty) arguments should have no arguments", 0, arguments.stream().count());
-		arguments.addArgument(EnumTest.ARG1);
-		assertEquals("Empty arguments + 1 argument (should) = 1 argument", 1, arguments.stream().count());
-		arguments.addArgument(EnumTest.ARG2);
-		assertEquals("Empty arguments + 2 arguments (should) = 2 arguments", 2, arguments.stream().count());
-		arguments.addArgument(EnumTest.ARG2);
-		assertEquals("Adding an argument multiple time should have no effect on the number of arguments", 2,
-				arguments.stream().count());
+		assertEquals(0, args.stream().count());
+		args.addArgument(ArgsEnum.ARG1);
+		assertEquals(1, args.stream().count());
+		args.addArgument(ArgsEnum.ARG2);
+		assertEquals(2, args.stream().count());
+		args.addArgument(ArgsEnum.ARG2);
+		assertEquals(2,	args.stream().count());
+		args.addArguments(ArgsEnum.values());
+		assertEquals(ArgsEnum.values().length, args.stream().count());
 	}
+
+	@Test
+	public void testGroupOrder() {
+		final SortedSet<Integer> groups = new TreeSet<>();
+		final ArgsEnum arg = ArgsEnum.ARG1;
+		args.addArgument(arg);
+		args.enableGroupOrder(arg.getGroupID());
+		groups.add(arg.getGroupID());
+		assertEquals(groups, args.getGroupOrder());
+		args = Arguments.empty();
+		args.enableGroupOrder(50);
+		assertEquals(new TreeSet<>(), args.getGroupOrder());
+	}
+	
+	@Test
+	public void testSetGroupId() {
+		final ArgsEnum arg = ArgsEnum.ARG1;
+		final int newGroupId = 50;
+		List<Integer> fromIt = new ArrayList<>();
+		args.addArgument(arg);
+		args.setGroupID(arg.getArgument(), newGroupId);
+		args.enableGroupOrder(newGroupId);
+		args.getGroupOrder().forEach(fromIt::add);
+		assertTrue(fromIt.contains(newGroupId));
+		
+		final int newGroupIdFalse = 49;
+		final ArgsEnum argFalse = ArgsEnum.ARG4;
+		args.setGroupID(argFalse.getArgument(), newGroupIdFalse);
+		args.enableGroupOrder(newGroupIdFalse);
+		fromIt.clear();
+		args.getGroupOrder().forEach(fromIt::add);
+		assertFalse(fromIt.contains(newGroupIdFalse));
+	}
+
 }

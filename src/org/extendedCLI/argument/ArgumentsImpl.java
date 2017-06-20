@@ -50,7 +50,7 @@ class ArgumentsImpl implements Arguments{
 
 	@Override
 	public void enableGroupOrder(int groupID) {
-		if (groups.values().contains(groupID)) {
+		if (groups.containsKey(groupID)) {
 			order.add(groupID);
 		}
 	}

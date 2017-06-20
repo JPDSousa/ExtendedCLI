@@ -11,12 +11,12 @@ interface Args {
 	static final Argument _ARG4 = Argument.create("These", Requires.OPTIONAL);
 }
 
-enum EnumTest implements ArgumentEnum {
+enum ArgsEnum implements ArgumentEnum {
 	
-	ARG1(EnumTest.GROUP_ID_1, Args._ARG1),
-	ARG2(EnumTest.GROUP_ID_1, Args._ARG2),
-	ARG3(EnumTest.GROUP_ID_2, Args._ARG3),
-	ARG4(EnumTest.GROUP_ID_3, Args._ARG4);
+	ARG1(ArgsEnum.GROUP_ID_1, Args._ARG1),
+	ARG2(ArgsEnum.GROUP_ID_1, Args._ARG2),
+	ARG3(ArgsEnum.GROUP_ID_2, Args._ARG3),
+	ARG4(ArgsEnum.GROUP_ID_3, Args._ARG4);
 	
 	private final int groupID;
 	private final Argument argument;
@@ -25,7 +25,7 @@ enum EnumTest implements ArgumentEnum {
 	static final int GROUP_ID_2 = 2;
 	static final int GROUP_ID_3 = 3;
 	
-	private EnumTest(int groupID, Argument argument) {
+	private ArgsEnum(int groupID, Argument argument) {
 		this.groupID = groupID;
 		this.argument = argument;
 	}
