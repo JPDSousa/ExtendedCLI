@@ -116,10 +116,5 @@ public class ArgumentsTest {
 		args.setRequirementRelation(arg1, arg2);
 		assertTrue(Iterables.isEmpty(args.getRequiredArguments(arg1)));
 	}
-	
-	@Test
-	public void testValidate() {
-		todo
-	}
 
 }
