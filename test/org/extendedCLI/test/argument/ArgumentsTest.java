@@ -11,6 +11,8 @@ import org.extendedCLI.argument.Arguments;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.Iterables;
+
 @SuppressWarnings("javadoc")
 public class ArgumentsTest {
 
@@ -92,6 +94,32 @@ public class ArgumentsTest {
 		fromIt.clear();
 		args.getGroupOrder().forEach(fromIt::add);
 		assertFalse(fromIt.contains(newGroupIdFalse));
+	}
+	
+	@Test
+	public void testRequirements() {
+		final ArgsEnum arg2 = ArgsEnum.ARG2;
+		final ArgsEnum arg1 = ArgsEnum.ARG1;
+		args.addArgument(arg1);
+		args.addArgument(arg2);
+		args.setRequirementRelation(arg1, arg2);
+		assertTrue(Iterables.contains(args.getRequiredArguments(arg1), arg2));
+	}
+	
+	@Test
+	public void testRequirementsMissingArgs() {
+		final ArgsEnum arg2 = ArgsEnum.ARG2;
+		final ArgsEnum arg1 = ArgsEnum.ARG1;
+		args.setRequirementRelation(arg1, arg2);
+		assertTrue(Iterables.isEmpty(args.getRequiredArguments(arg1)));
+		args.addArgument(arg1);
+		args.setRequirementRelation(arg1, arg2);
+		assertTrue(Iterables.isEmpty(args.getRequiredArguments(arg1)));
+	}
+	
+	@Test
+	public void testValidate() {
+		todo
 	}
 
 }

@@ -1,11 +1,8 @@
 package org.extendedCLI.argument;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -16,19 +13,28 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
 import org.extendedCLI.command.ExtendedCommandLine;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.SetMultimap;
+import com.google.common.graph.GraphBuilder;
+import com.google.common.graph.MutableGraph;
+
+import static com.google.common.base.Preconditions.*;
 
 class ArgumentsImpl implements Arguments{
 
 	private final Set<Argument> args;
-	private final Map<Integer, List<Argument>> groups;
-	private final Map<Argument, List<Argument>> requirements;
+	private final SetMultimap<Integer, Argument> groups;
+	private final MutableGraph<Argument> requirements;
 	private final SortedSet<Integer> order;
 
 	ArgumentsImpl() {
 		args = new LinkedHashSet<>();
-		groups = new LinkedHashMap<>();
-		requirements = new LinkedHashMap<>();
+		groups = LinkedHashMultimap.create();
+		requirements = GraphBuilder.directed().build();
 		order = new TreeSet<>();
 	}
 
@@ -39,11 +45,13 @@ class ArgumentsImpl implements Arguments{
 
 	@Override
 	public void addArgument(Argument arg) {
+		checkArgument(arg != null, "Cannot add a null argument.");
 		args.add(arg);
 	}
 
 	@Override
 	public void addArgument(ArgumentEnum enumValue) {
+		checkArgument(enumValue != null, "Cannot add a null argument.");
 		addArgument(enumValue.getArgument());
 		setGroupID(enumValue.getArgument(), enumValue.getGroupID());
 	}
@@ -62,41 +70,40 @@ class ArgumentsImpl implements Arguments{
 
 	@Override
 	public void addArguments(ArgumentEnum[] enumValues) {
-		Arrays.stream(enumValues).forEach(a -> addArgument(a));
+		checkArgument(enumValues != null, "Cannot add a null argument.");
+		Arrays.stream(enumValues).forEach(this::addArgument);
 	}
 
 	@Override
 	public void setGroupID(Argument arg, int groupID) {
-		final List<Argument> args;
-
-		if (this.args.contains(arg)) {
-			if (groups.containsKey(groupID)) {
-				args = groups.get(groupID);
-			} else {
-				args = new ArrayList<>();
-				groups.put(groupID, args);
-			}
-			args.add(arg);
+		if (args.contains(arg)) {
+			groups.put(groupID, arg);
 		}
 	}
 
 	@Override
 	public void setRequirementRelation(Argument arg, Argument required) {
-		final List<Argument> requirements;
 		if (args.contains(arg) && args.contains(required)) {
-			if (this.requirements.containsKey(arg)) {
-				requirements = this.requirements.get(arg);
-			} else {
-				requirements = new ArrayList<>();
-				this.requirements.put(arg, requirements);
-			}
-			requirements.add(required);
+			requirements.putEdge(arg, required);
 		}
 	}
 
 	@Override
 	public void setRequirementRelation(ArgumentEnum enumValue, ArgumentEnum required) {
+		checkArgument(enumValue != null && required != null, "Cannot set a relation between null arguments.");
 		setRequirementRelation(enumValue.getArgument(), required.getArgument());
+	}
+
+	@Override
+	public Iterable<Argument> getRequiredArguments(Argument arg) {
+		checkArgument(arg != null, "Cannot add a null argument.");
+		return requirements.successors(arg);
+	}
+
+	@Override
+	public Iterable<Argument> getRequiredArguments(ArgumentEnum arg) {
+		checkArgument(arg != null, "Cannot add a null argument.");
+		return getRequiredArguments(arg.getArgument());
 	}
 
 	@Override
@@ -118,11 +125,13 @@ class ArgumentsImpl implements Arguments{
 	@Override
 	public String getSyntax() {
 		final StringBuilder builder = new StringBuilder();
-		order.forEach(id -> builder.append(toStringArgumentList(groups.get(id))));
+		order.forEach(id -> builder.append(toStringArgumentList(Lists.newArrayList(groups.get(id)))));
 		groups.keySet().stream()
 		.filter(id -> !order.contains(id))
-		.map(id -> groups.get(id))
-		.forEach(group -> builder.append(toStringArgumentList(group)));
+		.map(groups::get)
+		.map(Lists::newArrayList)
+		.map(this::toStringArgumentList)
+		.forEach(builder::append);
 
 		return builder.toString();
 	}
@@ -153,8 +162,8 @@ class ArgumentsImpl implements Arguments{
 	}
 
 	private void validateRequirements(CommandLine commandLine) {
-		for (Argument arg : requirements.keySet()) {
-			thisRequiresThose(commandLine, arg, requirements.get(arg));
+		for (Argument arg : requirements.nodes()) {
+			thisRequiresThose(commandLine, arg, requirements.successors(arg));
 		}
 	}
 
@@ -166,18 +175,13 @@ class ArgumentsImpl implements Arguments{
 		return options;
 	}
 
-	private static boolean and(CommandLine commandLine, List<Argument> l) {
+	private static boolean and(CommandLine commandLine, Set<Argument> l) {
 		return !l.stream().filter(a -> !commandLine.hasOption(a.getName())).findFirst().isPresent();
 	}
 
-	private static void thisRequiresThose(CommandLine commandLine, Argument thiz, List<Argument> those) {
+	private static void thisRequiresThose(CommandLine commandLine, Argument thiz, Set<Argument> those) {
 		if (commandLine.hasOption(thiz.getDescription()) && !and(commandLine, those)) {
 			throw new IllegalArgumentException();
 		}
-	}
-	
-	void addDefaultArgument(int groupID, Argument argument) {
-		addArgument(argument);
-		groups.put(groupID, Arrays.asList(argument));
 	}
 }
