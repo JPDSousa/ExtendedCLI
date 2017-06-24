@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.extendedCLI.argument.Argument;
+import org.extendedCLI.argument.ArgumentEnum;
 import org.extendedCLI.argument.Arguments;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +51,11 @@ public class ArgumentsTest {
 		args.addArgument(ArgsEnum.ARG3.getArgument());
 		assertEquals(3, args.stream().count());
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddArgumentNull() {
+		args.addArgument((Argument) null);
+	}
 
 	@Test
 	public void testAddArgumentEnum() {
@@ -61,6 +68,17 @@ public class ArgumentsTest {
 		assertEquals(2,	args.stream().count());
 		args.addArguments(ArgsEnum.values());
 		assertEquals(ArgsEnum.values().length, args.stream().count());
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddArgumentEnumNull() {
+		args.addArgument((ArgumentEnum) null);
+	}
+	
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testAddArgumentsNull() {
+		args.addArguments(null);
 	}
 
 	@Test
@@ -106,6 +124,21 @@ public class ArgumentsTest {
 		assertTrue(Iterables.contains(args.getRequiredArguments(arg1), arg2.getArgument()));
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void testSetRequirementRelationEnumNull() {
+		args.setRequirementRelation((ArgumentEnum) null, (ArgumentEnum) null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetRequirementsNull() {
+		args.getRequiredArguments((Argument) null);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testGetRequirementsEnumNull() {
+		args.getRequiredArguments((ArgumentEnum) null);
+	}
+	
 	@Test
 	public void testRequirementsMissingArgs() {
 		final ArgsEnum arg2 = ArgsEnum.ARG2;
@@ -147,6 +180,11 @@ public class ArgumentsTest {
 		//Help always returns a null command line
 		assertNull(args.validate("-h"));
 		assertNotNull(args.validate("-A -B -C this -D dArg"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testValidateUnrecognizedToken() {
+		args.validate("-DontKnowThisToken");
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
