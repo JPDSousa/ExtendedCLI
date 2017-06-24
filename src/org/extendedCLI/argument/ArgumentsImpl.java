@@ -122,7 +122,12 @@ class ArgumentsImpl implements Arguments{
 	@Override
 	public String getSyntax() {
 		final StringBuilder builder = new StringBuilder();
-		order.forEach(id -> builder.append(toStringArgumentList(Lists.newArrayList(groups.get(id)))));
+		order.stream()
+		.map(groups::get)
+		.map(Lists::newArrayList)
+		.map(this::toStringArgumentList)
+		.forEach(builder::append);
+		
 		groups.keySet().stream()
 		.filter(id -> !order.contains(id))
 		.map(groups::get)
@@ -147,7 +152,9 @@ class ArgumentsImpl implements Arguments{
 
 	private void validateValues(CommandLine commandLine) {
 		boolean invalidArgs = stream()
+				//filter all arguments that require a value
 				.filter(a -> commandLine.hasOption(a.getName()) && a.requiresValue() == Requires.TRUE)
+				//filter all arguments that have no value or an invalid one
 				.filter(a -> commandLine.getOptionValue(a.getName(), "").isEmpty()
 						|| !a.isValid(commandLine.getOptionValue(a.getName())))
 				.findFirst().isPresent();
@@ -167,17 +174,22 @@ class ArgumentsImpl implements Arguments{
 	@Override
 	public Options toOptions() {
 		final Options options = new Options();
-		stream().forEach(a -> options.addOption(a.toOption()));
+		stream()
+		.map(Argument::toOption)
+		.forEach(options::addOption);
 
 		return options;
 	}
 
 	private static boolean and(CommandLine commandLine, Set<Argument> l) {
-		return !l.stream().filter(a -> !commandLine.hasOption(a.getName())).findFirst().isPresent();
+		return !l.stream()
+				.filter(a -> !commandLine.hasOption(a.getName()))
+				.findFirst()
+				.isPresent();
 	}
 
 	private static void thisRequiresThose(CommandLine commandLine, Argument thiz, Set<Argument> those) {
-		if (commandLine.hasOption(thiz.getDescription()) && !and(commandLine, those)) {
+		if (commandLine.hasOption(thiz.getName()) && !and(commandLine, those)) {
 			throw new IllegalArgumentException();
 		}
 	}

@@ -5,10 +5,11 @@ import org.extendedCLI.argument.ArgumentEnum;
 import org.extendedCLI.argument.Requires;
 
 interface Args {
-	static final Argument _ARG1 = Argument.create("This", Requires.FALSE);
-	static final Argument _ARG2 = Argument.create("That", Requires.OPTIONAL, "just a normal description");
-	static final Argument _ARG3 = Argument.create("Those", Requires.TRUE, "A small and simple description", new String[]{"this", "that"}, "this");
-	static final Argument _ARG4 = Argument.create("These", Requires.OPTIONAL);
+	// Be careful when changing this. Some tests rely on the arguments' values
+	static final Argument _ARG1 = Argument.create("A", Requires.FALSE);
+	static final Argument _ARG2 = Argument.create("B", Requires.OPTIONAL, "just a normal description");
+	static final Argument _ARG3 = Argument.create("C", Requires.TRUE, "A small and simple description", new String[]{"this", "that"}, "this");
+	static final Argument _ARG4 = Argument.create("D", Requires.OPTIONAL);
 }
 
 enum ArgsEnum implements ArgumentEnum {

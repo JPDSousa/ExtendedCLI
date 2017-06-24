@@ -116,5 +116,51 @@ public class ArgumentsTest {
 		args.setRequirementRelation(arg1, arg2);
 		assertTrue(Iterables.isEmpty(args.getRequiredArguments(arg1)));
 	}
+	
+	@Test
+	public void testGetSyntax() {
+		args.addArgument(ArgsEnum.ARG1);
+		args.addArgument(ArgsEnum.ARG2);
+		args.addArgument(ArgsEnum.ARG3);
+		args.addArgument(ArgsEnum.ARG4);
+		args.enableGroupOrder(ArgsEnum.GROUP_ID_1);
+		args.enableGroupOrder(ArgsEnum.GROUP_ID_2);
+		assertNotNull(args.getSyntax());
+	}
+	
+	@Test
+	public void testToOption() {
+		args.addArgument(ArgsEnum.ARG1);
+		args.addArgument(ArgsEnum.ARG2);
+		
+		//Options has no equals implementation
+		assertNotNull(args.toOptions());
+	}
 
+	@Test
+	public void testValidate() {
+		args = Arguments.create();
+		args.addArgument(ArgsEnum.ARG1);
+		args.addArgument(ArgsEnum.ARG2);
+		args.addArgument(ArgsEnum.ARG3);
+		args.addArgument(ArgsEnum.ARG4);
+		//Help always returns a null command line
+		assertNull(args.validate("-h"));
+		assertNotNull(args.validate("-A -B -C this -D dArg"));
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testValidateInvalidArgValue() {
+		args.addArgument(ArgsEnum.ARG3);
+		args.validate("-C invalid");
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testValidateFailRequirements() {
+		args.addArgument(ArgsEnum.ARG1);
+		args.addArgument(ArgsEnum.ARG2);
+		args.setRequirementRelation(ArgsEnum.ARG1, ArgsEnum.ARG2);
+		//Contains ARG1 but not ARG2, so it must fail
+		args.validate("-A");
+	}
 }
