@@ -166,5 +166,15 @@ class DefaultArgument implements Argument {
 		}
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return new StringBuilder(getName())
+				.append("{")
+				.append(requiresValue())
+				.append("}")
+				.toString();
+		
+	}
 
 }
