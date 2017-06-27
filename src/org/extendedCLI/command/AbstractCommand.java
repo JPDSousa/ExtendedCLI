@@ -1,15 +1,18 @@
 package org.extendedCLI.command;
 
-import java.io.BufferedReader;
-
 import org.apache.commons.cli.HelpFormatter;
 import org.extendedCLI.argument.Arguments;
+import org.extendedCLI.ioAdapters.InputAdapter;
+import org.extendedCLI.ioAdapters.OutputAdapter;
+
+import static com.google.common.base.Preconditions.*;
 
 @SuppressWarnings("javadoc")
 public abstract class AbstractCommand implements Command {
 
 	private final Arguments args;
-	protected BufferedReader reader;
+	protected InputAdapter input;
+	protected OutputAdapter output;
 	private String description;
 	private String name;
 
@@ -42,8 +45,15 @@ public abstract class AbstractCommand implements Command {
 	public abstract void undo();
 
 	@Override
-	public void setInputReader(BufferedReader inputreader) {
-		this.reader = inputreader;
+	public void setInputAdapter(InputAdapter input) {
+		checkArgument(input != null, "The input cannot be null");
+		this.input = input;
+	}
+
+	@Override
+	public void setOutputAdapter(OutputAdapter output) {
+		checkArgument(output != null, "The output cannot be null");
+		this.output = output;
 	}
 
 	protected abstract void execute(ExtendedCommandLine commandLine);

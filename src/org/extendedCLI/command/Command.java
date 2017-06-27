@@ -1,8 +1,8 @@
 package org.extendedCLI.command;
 
-import java.io.BufferedReader;
-
 import org.extendedCLI.argument.Arguments;
+import org.extendedCLI.ioAdapters.InputAdapter;
+import org.extendedCLI.ioAdapters.OutputAdapter;
 
 @SuppressWarnings("javadoc")
 public interface Command {
@@ -11,7 +11,8 @@ public interface Command {
 	
 	void undo();
 	
-	void setInputReader(BufferedReader inputreader);
+	void setInputAdapter(InputAdapter input);
+	void setOutputAdapter(OutputAdapter output);
 
 	Arguments getArgs();
 
