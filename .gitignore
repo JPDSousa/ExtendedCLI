@@ -18,3 +18,8 @@ target/classes/META-INF/MANIFEST.MF
 target/classes/META-INF/maven/ExtendedCLI/ExtendedCLI/pom.properties
 target/classes/META-INF/maven/ExtendedCLI/ExtendedCLI/pom.xml
 /target/
+
+# Intellij
+.DS_Store
+.idea/
+ExtendedCLI.iml
