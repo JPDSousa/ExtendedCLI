@@ -20,8 +20,12 @@ target/classes/META-INF/maven/ExtendedCLI/ExtendedCLI/pom.xml
 /target/
 
 ### IntelliJ IDEA ###
+=======
 .idea
 *.iws
 *.iml
 *.ipr
 out/
+.DS_Store
+.idea/
+ExtendedCLI.iml
