@@ -37,7 +37,7 @@ public class HistoryTest {
     }
 
     @Test
-    public void testHistoryDescription() {
+    public void testDescription() {
         assertThat(testHistory.getDescription(), containsString("history with timestamps"));
     }
 
