@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/JPDSousa/ExtendedCLI.svg?branch=master)](https://travis-ci.org/JPDSousa/ExtendedCLI)
 [![codecov](https://codecov.io/gh/JPDSousa/ExtendedCLI/branch/master/graph/badge.svg)](https://codecov.io/gh/JPDSousa/ExtendedCLI)
 [![](https://jitpack.io/v/JPDSousa/ExtendedCLI.svg)](https://jitpack.io/#JPDSousa/ExtendedCLI)
+[![BCH compliance](https://bettercodehub.com/edge/badge/JPDSousa/ExtendedCLI?branch=master)](https://bettercodehub.com/)
 
 ExtendedCLI is a Command Line Interface framework that allows its users to build complex fully-customizable CLIs in Java. Through ExtendedCLI users are able:
  - Design a CLI with multiple commands, each command with a set of customizable options;
