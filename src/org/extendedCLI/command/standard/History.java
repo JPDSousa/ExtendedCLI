@@ -11,8 +11,10 @@ import org.extendedCLI.command.Command;
 import org.extendedCLI.command.ExtendedCommandLine;
 
 @SuppressWarnings("javadoc")
-public class History extends AbstractCommand{
-	
+public class History extends AbstractCommand {
+
+	public static final String NO_COMMANDS_STRING = "No commands yet.";
+
 	private final Map<Long, Command> history;
 
 	public History(Map<Long, Command> history) {
@@ -22,11 +24,11 @@ public class History extends AbstractCommand{
 
 	@Override
 	protected void execute(ExtendedCommandLine commandLine) {
-		if(history.isEmpty()){
-			System.out.println("No commands yet.");
+		if(history.isEmpty()) {
+			System.out.println(NO_COMMANDS_STRING);
 		}
-		else{
-			for(long date : history.keySet()){
+		else {
+			for(long date : history.keySet()) {
 				System.out.println(LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault()) + " -> " + history.get(date));
 			}
 		}
