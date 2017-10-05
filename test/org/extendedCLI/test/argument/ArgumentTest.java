@@ -151,4 +151,33 @@ public class ArgumentTest {
 		
 		assertEquals("Get should return set value", defaultValue, argument.getDefaultValue());
 	}
+
+	@Test
+	public void testEqualsWithNullObject() {
+		final Argument argument = Argument.create("Name", Requires.OPTIONAL, "Desc", new String[]{"this", "default"}, "this");
+
+		assertFalse("Equals should return false when compared to a null", argument.equals(null));
+	}
+
+	@Test
+	public void testEqualsWithDifferentClass() {
+		final Argument argument = Argument.create("Name", Requires.OPTIONAL, "Desc", new String[]{"this", "default"}, "this");
+
+		assertFalse("Equals should return false when compared instance of a different class", argument.equals("test"));
+	}
+
+	@Test
+	public void testEqualsWhenOnlyNamesAreEqual() {
+		final Argument argument = Argument.create("Name", Requires.TRUE, "Description", new String[]{"this1", "default1"}, "this1");
+		final Argument testArgument = Argument.create("Name", Requires.OPTIONAL, "Desc", new String[]{"this2", "default2"}, "this2");
+
+		assertTrue("Equals should return true when the names are the same", argument.equals(testArgument));
+	}
+
+	@Test
+	public void testToStringContainsNameAndRequired() {
+		final Argument argument = Argument.create("Name", Requires.TRUE, "Description", new String[]{"this1", "default1"}, "this1");
+
+		assertEquals("Name{TRUE}", argument.toString());
+	}
 }
