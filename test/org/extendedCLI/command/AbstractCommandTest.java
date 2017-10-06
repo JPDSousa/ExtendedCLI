@@ -1,39 +1,96 @@
 package org.extendedCLI.command;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import org.apache.commons.cli.Options;
 import org.extendedCLI.argument.Arguments;
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class AbstractCommandTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullInputAdapter() {
-        new AbstractCommand(mock(Arguments.class)) {
-            @Override
-            public void undo() {
+  private ByteArrayOutputStream stdOut;
 
-            }
+  @Before
+  public void setUp() {
+    stdOut = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(stdOut));
+  }
 
-            @Override
-            protected void execute(ExtendedCommandLine commandLine) {
+  @Test
+  public void testExecuteIsCalledWhenCommandGiven() {
+    Arguments args = mock(Arguments.class);
+    ExtendedCommandLine extendedCli = mock(ExtendedCommandLine.class);
+    when(args.validate(anyString())).thenReturn(extendedCli);
 
-            }
-        }.setInputAdapter(null);
-    }
+    AbstractCommand abstractCommand = createAbstractCommand(args);
+    abstractCommand.execute("test");
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullOutputAdapter() {
-        new AbstractCommand(mock(Arguments.class)) {
-            @Override
-            public void undo() {
+    assertEquals("Execute called", stdOut.toString());
+  }
 
-            }
+  @Test
+  public void testHelpIsCalledWhenCommandIsNull() {
+    Arguments args = mock(Arguments.class);
+    when(args.validate(anyString())).thenReturn(null);
+    when(args.getSyntax()).thenReturn("syntax");
+    when(args.toOptions()).thenReturn(new Options());
 
-            @Override
-            protected void execute(ExtendedCommandLine commandLine) {
+    AbstractCommand abstractCommand = createAbstractCommand(args);
+    abstractCommand.setDescription("description");
+    abstractCommand.execute("test");
 
-            }
-        }.setOutputAdapter(null);
-    }
+    assertEquals("usage:  syntax\n" +
+        "description\n" +
+        "\n", stdOut.toString());
+  }
+
+  private AbstractCommand createAbstractCommand(Arguments args) {
+    return new AbstractCommand(args) {
+      @Override
+      public void undo() {
+        System.out.print("Undo called");
+      }
+
+      @Override
+      protected void execute(ExtendedCommandLine commandLine) {
+        System.out.print("Execute called");
+      }
+    };
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNullInputAdapter() {
+    new AbstractCommand(mock(Arguments.class)) {
+      @Override
+      public void undo() {
+
+      }
+
+      @Override
+      protected void execute(ExtendedCommandLine commandLine) {
+
+      }
+    }.setInputAdapter(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testNullOutputAdapter() {
+    new AbstractCommand(mock(Arguments.class)) {
+      @Override
+      public void undo() {
+
+      }
+
+      @Override
+      protected void execute(ExtendedCommandLine commandLine) {
+
+      }
+    }.setOutputAdapter(null);
+  }
 }

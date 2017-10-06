@@ -16,6 +16,7 @@ public class ArgumentEnumTest {
 	@Test
 	public void testGetArgument() {
 		assertEquals("Argument returned should match argument set on enum construction", Args._ARG1, ArgsEnum.ARG1.getArgument());
+
 		assertNotEquals("Argument returned should not match other arguments set on enum construction", Args._ARG1, ArgsEnum.ARG2.getArgument());
 	}
 
