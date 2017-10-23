@@ -157,10 +157,8 @@ class DefaultArgument implements Argument {
 			return false;
 		}
 		DefaultArgument other = (DefaultArgument) obj;
-		if (!name.equals(other.name)) {
-			return false;
-		}
-		return true;
+
+		return name.equals(other.name);
 	}
 	
 	@Override
