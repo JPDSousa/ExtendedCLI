@@ -4,11 +4,11 @@ import org.extendedCLI.command.CLIBuilder;
 import org.extendedCLI.command.Command;
 import org.extendedCLI.command.ExtendedCLI;
 import org.extendedCLI.exceptions.NoSuchCommandException;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("javadoc")
 public class ExtendedCLITest {
 
     private String line = "command1 -p path_to_something";
@@ -26,7 +26,6 @@ public class ExtendedCLITest {
 
         // arrange
         Command command1 =  mock(Command.class);
-        Command command2 =  mock(Command.class);
         CLIBuilder builder = createSensitiveCLIBuilder();
 
         builder.registerCommand("Command1", command1);
