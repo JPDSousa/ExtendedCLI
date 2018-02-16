@@ -8,26 +8,30 @@ import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 import static org.mockito.Mockito.mock;
 
+import java.util.Collections;
+
+@SuppressWarnings("javadoc")
 public class ExitTest {
 
-  private Exit exit;
-  @Rule
-  public final ExpectedSystemExit exitRule = ExpectedSystemExit.none();
+	private Exit exit;
+	
+	@Rule
+	public final ExpectedSystemExit exitRule = ExpectedSystemExit.none();
 
-  @Before
-  public void setUp() {
-    exit = new Exit();
-  }
+	@Before
+	public void setUp() {
+		exit = new Exit(Collections.emptyList(), () -> System.exit(0));
+	}
 
-  @Test
-  public void testExecuteIssuesExitSig() {
-    exitRule.expectSystemExit();
-    exit.execute(mock(ExtendedCommandLine.class));
-  }
+	@Test
+	public void testExecuteIssuesExitSig() {
+		exitRule.expectSystemExit();
+		exit.execute(mock(ExtendedCommandLine.class));
+	}
 
-  @Test
-  public void testUndoDoesNothing() {
-    exit.undo();
-  }
+	@Test(expected = UnsupportedOperationException.class)
+	public void testUndoFails() {
+		exit.undo();
+	}
 
 }

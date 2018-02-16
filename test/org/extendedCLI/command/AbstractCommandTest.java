@@ -1,96 +1,91 @@
 package org.extendedCLI.command;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.commons.cli.Options;
 import org.extendedCLI.argument.Arguments;
+import org.extendedCLI.ioAdapters.InputAdapter;
+import org.extendedCLI.ioAdapters.OutputAdapter;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("javadoc")
 public class AbstractCommandTest {
 
-  private ByteArrayOutputStream stdOut;
+	private ByteArrayOutputStream stdOut;
+	private AbstractCommand command;
+	private OutputAdapter outputAdapter;
 
-  @Before
-  public void setUp() {
-    stdOut = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(stdOut));
-  }
+	private AtomicBoolean isExecuteCalled;
+	private AtomicBoolean isUndoCalled;
 
-  @Test
-  public void testExecuteIsCalledWhenCommandGiven() {
-    Arguments args = mock(Arguments.class);
-    ExtendedCommandLine extendedCli = mock(ExtendedCommandLine.class);
-    when(args.validate(anyString())).thenReturn(extendedCli);
+	@Before
+	public void setUp() {
+		isExecuteCalled = new AtomicBoolean(false);
+		isUndoCalled = new AtomicBoolean(false);
+		
+		stdOut = new ByteArrayOutputStream();
+		outputAdapter = OutputAdapter.fromOutputStream(stdOut);
+	}
 
-    AbstractCommand abstractCommand = createAbstractCommand(args);
-    abstractCommand.execute("test");
+	public void setUp(final Arguments args) {
+		command = new AbstractCommand(args) {
+			@Override
+			public void undo() {
+				isUndoCalled.set(true);
+			}
 
-    assertEquals("Execute called", stdOut.toString());
-  }
+			@Override
+			protected void execute(ExtendedCommandLine commandLine) {
+				isExecuteCalled.set(true);
+			}
+		};
+		command.setIoSuppliers(() -> InputAdapter.SYSTEM_IN, () -> outputAdapter);
+	}
 
-  @Test
-  public void testHelpIsCalledWhenCommandIsNull() {
-    Arguments args = mock(Arguments.class);
-    when(args.validate(anyString())).thenReturn(null);
-    when(args.getSyntax()).thenReturn("syntax");
-    when(args.toOptions()).thenReturn(new Options());
+	@Test
+	public void testExecuteIsCalledWhenCommandGiven() {
+		Arguments args = mock(Arguments.class);
+		ExtendedCommandLine extendedCli = mock(ExtendedCommandLine.class);
+		when(args.validate(anyString())).thenReturn(extendedCli);
 
-    AbstractCommand abstractCommand = createAbstractCommand(args);
-    abstractCommand.setDescription("description");
-    abstractCommand.execute("test");
+		setUp(args);
+		command.execute("test");
 
-    assertEquals("usage:  syntax\n" +
-        "description\n" +
-        "\n", stdOut.toString());
-  }
+		assertTrue(isExecuteCalled.get());
+	}
 
-  private AbstractCommand createAbstractCommand(Arguments args) {
-    return new AbstractCommand(args) {
-      @Override
-      public void undo() {
-        System.out.print("Undo called");
-      }
+	@Test
+	public void testHelpIsCalledWhenCommandIsNull() {
+		final String syntax = "syntax";
+		final String description = "description";
 
-      @Override
-      protected void execute(ExtendedCommandLine commandLine) {
-        System.out.print("Execute called");
-      }
-    };
-  }
+		final Arguments args = mock(Arguments.class);
+		when(args.validate(anyString())).thenReturn(null);
+		when(args.getSyntax()).thenReturn(syntax);
+		when(args.toOptions()).thenReturn(new Options());
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullInputAdapter() {
-    new AbstractCommand(mock(Arguments.class)) {
-      @Override
-      public void undo() {
+		setUp(args);
+		command.setDescription(description);
+		command.execute("test");
 
-      }
+		final String output = stdOut.toString();
+		assertThat(output, containsString(syntax));
+		assertThat(output, containsString(description));
+	}
 
-      @Override
-      protected void execute(ExtendedCommandLine commandLine) {
+	@Test(expected = IllegalArgumentException.class)
+	public void testNullInputAdapter() {
+		mock(AbstractCommand.class, Mockito.CALLS_REAL_METHODS).setIoSuppliers(null, null);;
+	}
 
-      }
-    }.setInputAdapter(null);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testNullOutputAdapter() {
-    new AbstractCommand(mock(Arguments.class)) {
-      @Override
-      public void undo() {
-
-      }
-
-      @Override
-      protected void execute(ExtendedCommandLine commandLine) {
-
-      }
-    }.setOutputAdapter(null);
-  }
 }

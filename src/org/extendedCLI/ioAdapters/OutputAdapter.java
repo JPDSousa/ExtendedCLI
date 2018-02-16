@@ -1,19 +1,24 @@
 package org.extendedCLI.ioAdapters;
 
-import java.io.IOException;
+import java.io.Closeable;
 import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 @SuppressWarnings("javadoc")
-public interface OutputAdapter {
+public interface OutputAdapter extends Closeable {
 
-	static OutputAdapter fromPrintStream(PrintStream output) {
-		return PrintStreamAdapter.create(output);
-	}
-
+	OutputAdapter SYSTEM_OUT = fromOutputStream(System.out);
+	
 	static OutputAdapter fromOutputStream(OutputStream output) {
-		return fromPrintStream(new PrintStream(output));
+		return new PrintWriterAdapter(new PrintWriter(output));
 	}
 
-	public void println(String str) throws IOException;
+	void println(Object obj);
+	
+	void print(Object obj);
+	
+	PrintWriter asPrintWriter();
+	
+	void flush();
+	
 }

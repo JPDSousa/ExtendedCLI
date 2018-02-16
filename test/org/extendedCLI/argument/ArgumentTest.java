@@ -1,4 +1,4 @@
-package org.extendedCLI.test.argument;
+package org.extendedCLI.argument;
 
 import static org.junit.Assert.*;
 

@@ -1,5 +1,7 @@
 package org.extendedCLI.command;
 
+import java.util.function.Supplier;
+
 import org.extendedCLI.argument.Arguments;
 import org.extendedCLI.ioAdapters.InputAdapter;
 import org.extendedCLI.ioAdapters.OutputAdapter;
@@ -11,9 +13,6 @@ public interface Command {
 	
 	void undo();
 	
-	void setInputAdapter(InputAdapter input);
-	void setOutputAdapter(OutputAdapter output);
-
 	Arguments getArgs();
 
 	String getName();
@@ -23,5 +22,9 @@ public interface Command {
 	void setDescription(String description);
 
 	String getSyntax();
+	
+	void help();
+
+	void setIoSuppliers(Supplier<InputAdapter> inputSupplier, Supplier<OutputAdapter> outputSupplier);
 	
 }

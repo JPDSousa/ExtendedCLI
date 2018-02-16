@@ -1,25 +1,22 @@
 package org.extendedCLI.ioAdapters;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 
 @SuppressWarnings("javadoc")
 public interface InputAdapter {
 	
-	static InputAdapter fromBufferedReader(BufferedReader input) {
-		return BufferedReaderAdapter.create(input);
-	}
+	InputAdapter SYSTEM_IN = fromInputStream(System.in);
 	
-	static InputAdapter fromInputStreamReader(InputStreamReader reader) {
-		return fromBufferedReader(new BufferedReader(reader));
+	static InputAdapter fromReader(Reader input) {
+		return new ReaderInputAdapter(input);
 	}
 	
 	static InputAdapter fromInputStream(InputStream stream) {
-		return fromInputStreamReader(new InputStreamReader(stream));
+		return fromReader(new InputStreamReader(stream));
 	}
 	
-	public String readLine() throws IOException;
+	public String readLine();
 
 }

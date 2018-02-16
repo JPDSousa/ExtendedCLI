@@ -1,4 +1,4 @@
-package org.extendedCLI.test.argument;
+package org.extendedCLI.argument;
 
 import org.extendedCLI.argument.Argument;
 import org.extendedCLI.argument.ArgumentEnum;

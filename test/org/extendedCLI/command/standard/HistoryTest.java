@@ -1,70 +1,95 @@
 package org.extendedCLI.command.standard;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.HashMap;
+import java.io.OutputStream;
+import java.util.Collections;
 import java.util.Map;
 import org.extendedCLI.command.Command;
 import org.extendedCLI.command.ExtendedCommandLine;
+import org.extendedCLI.ioAdapters.InputAdapter;
+import org.extendedCLI.ioAdapters.OutputAdapter;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.ImmutableMap;
+
+import static org.apache.commons.lang3.StringUtils.countMatches;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("javadoc")
 public class HistoryTest {
 
-  private ByteArrayOutputStream stdOut;
-  private String command1Name = "command1";
-  private String command2Name = "command2";
+	private static final String COMMAND_1 = "command1";
+	private static final String COMMAND_2 = "command2";
 
-  @Before
-  public void setUp() {
-    stdOut = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(stdOut));
-  }
+	private OutputStream stdOut;
+	private Command history;
+	private OutputAdapter outputAdapter;
 
-  @Test
-  public void testCommandsDontExecuteWhenHistoryIsEmpty() {
-    History history = new History(new HashMap());
-    history.execute(mock(ExtendedCommandLine.class));
+	@Before
+	public void setUp() {
+		stdOut = new ByteArrayOutputStream();
+		outputAdapter = OutputAdapter.fromOutputStream(stdOut);
+		history = new History(Collections.emptyMap());
+		history.setIoSuppliers(() -> InputAdapter.SYSTEM_IN, () -> outputAdapter);
+	}
 
-    assertEquals("No commands yet.\n", stdOut.toString());
-  }
+	@Test
+	public void testEmptyHistory() {
+		history.execute("bogusValue");
+		assertThat(stdOut.toString(), containsString(History.NO_COMMANDS_STRING));
+	}
 
-  @Test
-  public void testHistoryMapValuesAreIteratedWhenExecute() {
-    Map<Long, Command> commands = createCommands();
-    History history = new History(commands);
+	@Test
+	public void testSomeHistory() {
+		final long timeOffset = 888888L;
+		final Command mockCommand =  mock(Command.class);
 
-    history.execute(mock(ExtendedCommandLine.class));
-    assertTrue(stdOut.toString().contains(createHistoryExecuteMessage(1L, command1Name)));
-    assertTrue(stdOut.toString().contains(createHistoryExecuteMessage(2L, command2Name)));
-  }
+		history = new History(
+				ImmutableMap.of(
+						System.currentTimeMillis(), mockCommand,
+						System.currentTimeMillis() + timeOffset, mockCommand)
+				);
+		
+		history.setIoSuppliers(() -> InputAdapter.SYSTEM_IN, () -> outputAdapter); 
+		history.execute("bogusValue");
 
-  @Test
-  public void testUndo() {
-    // no implementation
-    new History(new HashMap()).undo();
-  }
+		assertEquals(2, countMatches(stdOut.toString(), "->"));
+	}
 
-  private String createHistoryExecuteMessage(long date, String commandName) {
-    return LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault()) + " -> " + commandName;
-  }
+	@Test
+	public void testHistoryMapValuesAreIteratedWhenExecute() {
+		final History history = new History(createCommands());
+		history.setIoSuppliers(() -> InputAdapter.SYSTEM_IN, () -> outputAdapter);
 
-  private Map<Long, Command> createCommands() {
-    Map<Long, Command> commands = new HashMap();
-    Command command1 = mock(Command.class);
-    Command command2 = mock(Command.class);
-    when(command1.toString()).thenReturn(command1Name);
-    when(command2.toString()).thenReturn(command2Name);
-    commands.put(1L, command1);
-    commands.put(2L, command2);
-    return commands;
-  }
+		history.execute(mock(ExtendedCommandLine.class));
+		assertThat(stdOut.toString(), containsString(COMMAND_1));
+		assertThat(stdOut.toString(), containsString(COMMAND_2));
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testUndo() {
+		history.undo();
+	}
+
+	private Map<Long, Command> createCommands() {
+		Command command1 = mock(Command.class);
+		Command command2 = mock(Command.class);
+		when(command1.toString()).thenReturn(COMMAND_1);
+		when(command2.toString()).thenReturn(COMMAND_2);
+		
+		return ImmutableMap.of(
+				1L, command1,
+				2L, command2);
+	}
+
+	@Test
+	public void testDescription() {
+		assertThat(history.getDescription(), containsString(History.DESCRIPTION));
+	}
+
 }
