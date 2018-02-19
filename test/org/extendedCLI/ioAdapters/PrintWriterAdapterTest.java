@@ -23,11 +23,12 @@ public class PrintWriterAdapterTest {
 
 	@Test
 	public void testPrintlnPrintsToStdOut() {
+		final String lineBreaker = System.getProperty("line.separator");
 		final String expected = "test";
 		
 		printStreamAdapter.println(expected);
 		printStreamAdapter.flush();
-		assertEquals(expected + "\r\n", output.toString());
+		assertEquals(expected + lineBreaker, output.toString());
 	}
 	
 	@Test
